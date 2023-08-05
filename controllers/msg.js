@@ -1,7 +1,8 @@
 const Chat=require('../model/chat')
+const User=require('../model/user')
 exports.postMsg=async(req,res,next)=>{
     try {
-        const{id,Name}=req.user;
+        const{id}=req.user;
         const message=req.body.message;
         const mesg = await Chat.create( {message, userId:id});
         res.status(200).json({mesg, Name});
@@ -13,10 +14,14 @@ exports.postMsg=async(req,res,next)=>{
 }
 exports.getMessage = async (req,res,next)=>{
     try{
-    const {id, Name} = req.user;
 
-    const mesg = await Chat.findAll({where: {userId:id}});
-    res.status(200).json({mesg, Name});
+    const mesg = await Chat.findAll({include:[
+{
+    model:User,
+    attributes: ['id', 'Name']
+
+}] });
+    res.status(200).json({mesg});
     } catch(error) {
         console.log(error);
         res.status(500).json({error,success: false});
