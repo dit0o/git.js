@@ -14,13 +14,16 @@ exports.postMsg=async(req,res,next)=>{
 }
 exports.getMessage = async (req,res,next)=>{
     try{
-
-    const mesg = await Chat.findAll({include:[
+     
+        const lastId=+req.query.lastId || 0;
+        console.log(lastId)
+    let mesg = await Chat.findAll({offset:lastId ,include:[
 {
     model:User,
     attributes: ['id', 'Name']
 
-}] });
+}
+]});
     res.status(200).json({mesg});
     } catch(error) {
         console.log(error);
