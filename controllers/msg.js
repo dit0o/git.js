@@ -51,9 +51,7 @@ exports.postCreatgroup=async(req,res,next)=>{
     }catch(error){
         console.log(error);
         res.status(500).json({error,success:false});
-    }
-        
-  
+    } 
 }
 exports.getAllG = async(req,res,next) => {
     try {
@@ -72,4 +70,26 @@ exports.getAllG = async(req,res,next) => {
         console.log(error);
         res.status(500).json({error,success:false});
     }
+}
+function generateAccessToken(id){
+    return jwt.sign({id},process.env.TOKEN_SECRET);
+}
+
+exports.getInvite=async(req,res,next)=>{
+    try {
+const gId=req.query.gId;
+console.log(gId);
+res.status(200).json({
+    secretToken: generateAccessToken(gId)
+});
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+exports.getJoinGroup = async(req,res,next) => {
+    const gId = req.query.gId;
+    const uId = req.user.id;
+    const groupmem = await Groupmembers.create({userId:uId, groupId:gId});
+    res.status(200).json({groupmem,success:true});
 }
