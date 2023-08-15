@@ -46,7 +46,7 @@ exports.postCreatgroup=async(req,res,next)=>{
         const {gName}=req.body;
         const newGroup=await Group.create({gName,userId:eId});
         const nGId=newGroup.dataValues.id;
-        const groupmem=await Groupmembers.create({userId:eId,groupId:nGId})
+        const groupmem=await Groupmembers.create({userId:eId,groupId:nGId,isAdmin:true})
         res.status(200).json({newGroup,groupmem,success:true});
     }catch(error){
         console.log(error);
@@ -84,12 +84,12 @@ res.status(200).json({
 });
         
     } catch (error) {
-        console.log(error)
+        res.status(505).json({sms:"something not right"})
     }
 }
 exports.getJoinGroup = async(req,res,next) => {
     const gId = req.query.gId;
     const uId = req.user.id;
-    const groupmem = await Groupmembers.create({userId:uId, groupId:gId});
+    const groupmem = await Groupmembers.create({userId:uId, groupId:gId,isAdmin:false});
     res.status(200).json({groupmem,success:true});
 }
