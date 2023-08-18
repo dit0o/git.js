@@ -14,6 +14,7 @@ const Groupmembers=require('./model/membergroup')
 
 const userRouter=require('./routes/user')
 const msgRouter=require('./routes/message')
+const adminRouter=require('./routes/admin')
 
 const Sequelize=require('sequelize')
 const sequelize=require('./util/database')
@@ -22,6 +23,7 @@ const sequelize=require('./util/database')
 
 app.use(userRouter)
 app.use(msgRouter)
+app.use(adminRouter)
 
 
 User.hasMany(Chat)

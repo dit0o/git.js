@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 exports.postMsg=async(req,res,next)=>{
     try {
         const{id}=req.user;
-        const message=req.body.message;
+       const message=req.body.message;
         const gId=req.query.gId;
         console.log(gId)
         const mesg = await Chat.create( {message, userId:id,groupId:gId});
