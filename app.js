@@ -1,6 +1,9 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const app=express();
 app.use(bodyParser.json());
 const dotenv = require('dotenv');
@@ -17,8 +20,13 @@ const msgRouter=require('./routes/message')
 const adminRouter=require('./routes/admin')
 
 const Sequelize=require('sequelize')
+app.use(helmet());
 const sequelize=require('./util/database')
-
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'),
+    { flags: 'a' }
+);
+app.use(morgan('combined', { stream: accessLogStream }));
 
 
 app.use(userRouter)
@@ -47,6 +55,6 @@ sequelize.sync()
     app.listen(4000); 
 })
    .catch(err=>{
-    console.log(err)
+    console.logc(err)
    });
 
