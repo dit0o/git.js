@@ -19,6 +19,7 @@ const userRouter=require('./routes/user')
 const msgRouter=require('./routes/message')
 const adminRouter=require('./routes/admin')
 
+
 const Sequelize=require('sequelize')
 app.use(helmet());
 const sequelize=require('./util/database')
@@ -32,6 +33,9 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(userRouter)
 app.use(msgRouter)
 app.use(adminRouter)
+app.use((req,res)=>{
+    res.sendFile(path.join(__dirname,`public/${req.url}`))
+})
 
 
 User.hasMany(Chat)
@@ -52,7 +56,7 @@ Groupmembers.belongsTo(Group);
 
 sequelize.sync()
 .then(result=>{
-    app.listen(4000); 
+    app.listen(process.env.PORT_DEFAULT); 
 })
    .catch(err=>{
     console.log(err)

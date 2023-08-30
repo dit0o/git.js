@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+     <!-- CSS -->
+     <link rel="stylesheet" href="/gagan/css/style.css"> 
+</head>
+<body>
+    <section class="wrapper">
+        <div class="container">
+            <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
+                <form class="rounded bg-white shadow p-5" onsubmit="forgotpassword(event)" >
+                    <h3 class="text-dark font-weight-bolder fs-4 mb-2">Forget Password</h3>
+                       <div class="form-floating mb-3">
+                       <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                       <label for="floatingInput">Email</label>
+                      </div>
+                      <button type="submit" class=" btn btn-primary submit_btn w-100 my-4">Send mail </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="./forgotpass.js"></script>
