@@ -7,12 +7,12 @@
       PhoneNumber:document.getElementById('floatingTel').value,
       Password:document.getElementById('floatingPassword').value
     }
-    const response= await axios.post("http://3.25.109.206:4000/user/signup", user)
+    const response= await axios.post("http://localhost:4000/user/signup", user)
     
       .then((response) => {
         console.log(response.data.message);
         alert(response.data.message);
-        window.location.href = "./login/login.html"
+        window.location.href ="/public/html/login.html"
     })
     
   } 

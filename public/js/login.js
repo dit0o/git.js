@@ -5,12 +5,12 @@ async function formsubmit(event){
         Email:document.getElementById('floatingInput').value,
         Password:document.getElementById('floatingPassword').value
       }
-      const response= await axios.post("http://3.25.109.206:4000/user/login",login)
+      const response= await axios.post("http://localhost:4000/user/login",login)
       
         if(response.status===201){
          alert(response.data.message)
          localStorage.setItem('token',response.data.token)
-         window.location.href="../chat app/chat app.html"
+         window.location.href="/public/html/chat app.html"
         }
         else{
           throw new Error(response.data.message)
