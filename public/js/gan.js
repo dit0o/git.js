@@ -12,7 +12,7 @@
       .then((response) => {
         console.log(response.data.message);
         alert(response.data.message);
-        window.location.href ="/public/html/login.html"
+        window.location.href ="./login.html"
     })
     
   } 

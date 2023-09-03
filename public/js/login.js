@@ -23,5 +23,5 @@ async function formsubmit(event){
    
   }
   function forgotpassword(){
-    window.location.href ="../forgotpassword/forgotpass.html"
+    window.location.href ="/public/html/forgotpass.html"
   }

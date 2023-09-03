@@ -10,12 +10,23 @@ const addUserBtn = document.getElementById('add-user-btn');
 const usersList = document.getElementById('users-list');
 const usersBox = document.getElementById('users-box');
 
+const socket = io('http://localhost:4000');
+socket.on('connect',()=>{
+    console.log(socket.id);
+});
+
+socket.on('chat-message', data => {
+    getAllMsg(data);
+});
+
 
 inputObj.addEventListener('submit',(e)=>{
     e.preventDefault();
     let sendObj={message:sendMsg.value}
     axios.post(`http://localhost:4000/user/message?gId=${activeGroup}`,sendObj, { headers: {'Authorization': token}} )
     .then((response)=>{
+        socket.emit('send-chat-message', activeGroup);
+        addNewLineElement(response.data.mesg,response.data.Name,response.data.mesg.userId)
         })
     .catch((err) => {
         console.log(err);
@@ -44,10 +55,6 @@ try {
             addNewLineElement(element,element.user.Name,element.userId);
         })
     }
-
-   
-
-
 } catch (error) {
     console.log(error)
 }
@@ -75,7 +82,7 @@ window.addEventListener('DOMContentLoaded', async()=>{
                 
                 inviteBtn.removeAttribute('hidden');
                 msgUl.innerHTML='';
-               clearInterval(setIntId);
+               //clearInterval(setIntId);
                 const allM = await axios.get(`http://localhost:4000/user/message?gId=${ activeGroup}`, { headers: {'Authorization': token}} );
                 const arr = allM.data.mesg;
                 totalMsg = arr.length;
@@ -88,7 +95,7 @@ window.addEventListener('DOMContentLoaded', async()=>{
                 arr2.forEach(elem=>{
                      addNewUserElement(elem,allU.data.reqUserAdmin.isAdmin,ele.userId);
                 })
-                setIntId = setInterval(getAllMsg, 1000);
+                //setIntId = setInterval(getAllMsg, 1000);
             })
             allGDiv.appendChild(li);
         })

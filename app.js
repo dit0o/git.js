@@ -1,15 +1,15 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+const cors=require("cors")
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const app=express();
-app.use(bodyParser.json());
+
 const dotenv = require('dotenv');
 dotenv.config();
-const cors=require("cors")
-app.use(cors());
+
+
 const User = require('./model/user');
 const Chat=require('./model/chat')
 const Group=require('./model/group')
@@ -20,22 +20,38 @@ const msgRouter=require('./routes/message')
 const adminRouter=require('./routes/admin')
 
 
-const Sequelize=require('sequelize')
-app.use(helmet());
 const sequelize=require('./util/database')
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname, 'access.log'),
     { flags: 'a' }
 );
-app.use(morgan('combined', { stream: accessLogStream }));
 
+const app=express();
+const httpServer = require("http").createServer(app);
+const socketio = require("socket.io")
+const io = socketio(httpServer,{
+    cors:{
+        origin : ['*','http://127.0.0.1:5500'],
+    methods: ['GET', 'POST']
+    }
+});
+app.use(cors({
+    origin : ['*','http://127.0.0.1:5500'],
+    methods: ['GET', 'POST']
+    
+}))
+
+app.use(helmet());
+app.use(morgan('combined', { stream: accessLogStream }));
+app.use(bodyParser.json());
 
 app.use(userRouter)
 app.use(msgRouter)
 app.use(adminRouter)
-app.use((req,res)=>{
-    res.sendFile(path.join(__dirname,`public/${req.url}`))
-})
+//app.use((req,res)=>{
+    //console.log('url>>', req.url);
+  // res.sendFile(path.join(__dirname,`public/${req.url}`))
+//})
 
 
 User.hasMany(Chat)
@@ -56,9 +72,14 @@ Groupmembers.belongsTo(Group);
 
 sequelize.sync()
 .then(result=>{
-    app.listen(process.env.PORT_DEFAULT); 
+    httpServer.listen(4000); 
 })
    .catch(err=>{
     console.log(err)
    });
 
+   io.on('connection',socket=>{
+    socket.on('send-chat-message', message => {
+        socket.broadcast.emit('chat-message', message)
+    });
+});

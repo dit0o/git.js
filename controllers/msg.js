@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 exports.postMsg=async(req,res,next)=>{
     try {
         const{id}=req.user;
+        console.log(id)
+        const{Name}=req.user;
        const message=req.body.message;
         const gId=req.query.gId;
         console.log(gId)
