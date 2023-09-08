@@ -18,20 +18,26 @@
   },
   "homepage": "https://github.com/dit0o/git.js#readme",
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "pm2": "^5.3.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.1452.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "formidable": "^3.5.1",
     "fs": "^0.0.1-security",
     "helmet": "^7.0.0",
+    "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
-    "mysql2": "^3.5.2",
+    "mysql2": "^3.6.0",
     "path": "^0.12.7",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
   }
 }

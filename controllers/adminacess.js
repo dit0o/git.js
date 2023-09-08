@@ -58,6 +58,11 @@ exports.getRemU = async (req, res, next) => {
     try {
          const uId = req.query.id;
           const gId = req.query.gId;
+          const id = req.user.id;
+          const isAdm = await Groupmembers.findOne({where:{userId:id,groupId:gId},attributes:['isAdmin']});
+          if(!isAdm.dataValues.isAdmin){
+              return res.status(401).json({success:false,error:'Is not admin'});
+          }
            const remU = await Groupmembers.destroy({
              where: { groupId: gId, userId: uId }
 
@@ -77,6 +82,11 @@ exports.getMakeA = async (req, res, next) => {
     try {
         const uId = req.query.id;
         const gId = req.query.gId;
+        const id = req.user.id;
+        const isAdm = await Groupmembers.findOne({where:{userId:id,groupId:gId},attributes:['isAdmin']});
+        if(!isAdm.dataValues.isAdmin){
+            return res.status(401).json({success:false,error:'Is not admin'});
+        }
         const isAdmi = await Groupmembers.update({ isAdmin: true }, {
             where: { groupId: gId, userId: uId }
 

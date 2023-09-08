@@ -8,4 +8,5 @@ router.post('/user/message/creategroup',auth.authentication,msgController.postCr
 router.get('/user/message/allgroup',auth.authentication,msgController.getAllG)
 router.get('/user/message/getInvite',auth.authentication,msgController.getInvite)
 router.get('/user/message/joinGroup',auth.authentication,msgController.getJoinGroup)
+router.post('/user/saveFile', auth.authentication,msgController.postSaveFile);
 module.exports=router;

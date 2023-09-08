@@ -3,10 +3,13 @@ const User=require('../model/user')
 const Group=require('../model/group')
 const Groupmembers=require('../model/membergroup')
 const jwt = require('jsonwebtoken');
+const s3 = require('../services/S3services');
+const formidable = require('formidable');
+const path = require('path');
+const fs = require('fs');
 exports.postMsg=async(req,res,next)=>{
     try {
         const{id}=req.user;
-        console.log(id)
         const{Name}=req.user;
        const message=req.body.message;
         const gId=req.query.gId;
@@ -94,4 +97,31 @@ exports.getJoinGroup = async(req,res,next) => {
     const uId = req.user.id;
     const groupmem = await Groupmembers.create({userId:uId, groupId:gId,isAdmin:false});
     res.status(200).json({groupmem,success:true});
+}
+exports.postSaveFile = async(req,res,next)=>{
+    try{
+        const gId = req.header('groupId');
+        const {id,Nameame} = req.user;
+        const pathup = path.join(__dirname, '../uploads');
+        const form = formidable({ multiples: false,uploadDir : pathup,allowEmptyFiles :false,keepExtensions :true });
+        form.parse(req, async(err, fields, files) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            const fileName = `${gId}!File${req.user.id}!File${files.files.originalFilename}`;
+            const rawdata = fs.readFileSync(files.files.filepath);
+            const fileURL = await s3.uploadToS3(rawdata, fileName);
+            const mesg = await Chat.create({
+                message:fileURL,
+                userId: id,
+                groupId: gId
+            });
+            res.status(200).json({mesg,Name,success:true,fileName});
+        });
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({success:false,error:error.message});
+    }
 }

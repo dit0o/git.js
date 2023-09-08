@@ -27,6 +27,7 @@ inputObj.addEventListener('submit',(e)=>{
     .then((response)=>{
         socket.emit('send-chat-message', activeGroup);
         addNewLineElement(response.data.mesg,response.data.Name,response.data.mesg.userId)
+        sendMsg.value=''
         })
     .catch((err) => {
         console.log(err);
@@ -36,8 +37,14 @@ inputObj.addEventListener('submit',(e)=>{
 
 const msgUl=document.getElementById('messages-list');
 
-function addNewLineElement(data,Name){
+function addNewLineElement(data,Name,userId){
     const li=document.createElement('h4');
+    const loginId = localStorage.getItem('userId');
+    if(userId==loginId){
+        li.className = 'msg-right';
+    } else {
+        li.className = 'msg-left';
+    }
     li.appendChild(
         document.createTextNode(Name + ' : ' + data.message +' ')
     )
@@ -87,7 +94,7 @@ window.addEventListener('DOMContentLoaded', async()=>{
                 const arr = allM.data.mesg;
                 totalMsg = arr.length;
                 arr.forEach(element => {
-                    addNewLineElement(element, element.user.Name,);
+                    addNewLineElement(element, element.user.Name,element.userId);
                 });
                 const allU = await axios.get(`http://localhost:4000/user/message/allUsers?gId=${activeGroup}`, { headers: {'Authorization': token}});
                 const arr2 = allU.data.allUsers;
@@ -181,7 +188,7 @@ function addNewUserElement(ele,isAd,UId){
             remBtn.title = 'Remove User';
             remBtn.addEventListener('click', async () => {
                 console.log('remBtn>>',ele.userId);
-                const removed = await axios.get(`http://localhost:4000/user/message/removeU?id=${ele.userId}&gId=${activeGroup}`);
+                const removed = await axios.get(`http://localhost:4000/user/message/removeU?id=${ele.userId}&gId=${activeGroup}`,{ headers: {'Authorization': token}});
                 window.location.reload();
             })
             li.appendChild(remBtn);
@@ -194,7 +201,7 @@ function addNewUserElement(ele,isAd,UId){
             makeAdmin.innerHTML = 'Make Admin';
             makeAdmin.addEventListener('click', async ()=>{
                 console.log('makeAdmin',ele.userId);
-                const admined = await axios.get(`http://localhost:4000/user/message/makeA?id=${ele.userId}&gId=${activeGroup}`);
+                const admined = await axios.get(`http://localhost:4000/user/message/makeA?id=${ele.userId}&gId=${activeGroup}`,{ headers: {'Authorization': token}});
                 window.location.reload();
             })
             li.appendChild(makeAdmin);
@@ -202,3 +209,28 @@ function addNewUserElement(ele,isAd,UId){
     }
     usersList.appendChild(li);
 }
+const fileInput = document.getElementById('send-file-form');
+fileInput.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    console.log('clicked');
+    const selectedFile = document.getElementById('send-file');
+
+    const formData = new FormData();
+    for(let i =0; i < selectedFile.files.length; i++) {
+        formData.append("files", selectedFile.files[i]);
+    }
+    fetch("http://localhost:4000/user/saveFile", {
+        method: 'POST',
+        body: formData,
+        headers: {
+          "Authorization":token,
+          "groupId": activeGroup
+        }
+})
+.then(response=>{
+    socket.emit('send-chat-message',activeGroup);
+    addNewLineElement(response.data.mesg,response.data.Name,response.data.mesg.userId);
+}).catch(err=>{
+    console.error(err);
+});
+});
